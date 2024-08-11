@@ -1,5 +1,6 @@
 var mongoose = require("mongoose"); // Importamos una instancia de mongoose
 var express = require("express"); //Importamos una instancia de express ambos para poder establecer el manejo de rutas.
+var TaskModel = require("./task_schema");
 var router = express.Router();
 
 let environment = null;
@@ -53,5 +54,32 @@ mongoose.connect(
     }
   }
 );
+
+router.post("/create-task", function (req, res) {
+  // el req es lo que llega (Cuando del lado del cliente http el hace una petición con cierta información esto llega al servidor y el servidor lo recibe y lo captura en esta variable req la cual tiene el body que es el cuerpo de la solicitud)
+  // el res es la respuesta del lado del servidor, el servidor siempre debe responder, que hubo un error o que todo salio bien.
+
+  let task_id = req.body.TaskId;
+  let name = req.body.Name;
+  let deadline = req.body.Deadline;
+
+  let task = {
+    //Aqui creamos el json con la estructura
+    TaskId: task_id,
+    Name: name,
+    Deadline: deadline,
+  };
+  var newTask = new TaskModel(task); //lo que hay entre las lienas 64 a 69 se le pasa entonces con la información recibida al constructos mediante este argumento task
+
+  newTask.save(function (err, data) {
+    //Como este modelo ya implemento mongoose, el metodo save, lo que va a hacer es crear un nuevo recurso en la BD (nuevo registro), es decir el schema ya tiene toda esa información en la coleccion
+    if (err) {
+      console.log(err);
+      res.status(500).send("Internal error\n");
+    } else {
+      res.status(200).send("OK\n");
+    }
+  });
+});
 
 module.exports = router;

@@ -3,6 +3,9 @@ const api = require("./api"); //importamos la api.js para que se ejecute la cone
 const port = process.env.PORT || 3000;
 const app = express(); //Esta es la instancia de express, definición de la variable app
 
+const bodyParser = require("body-parser"); // lo que hacen estas dos lineas de código es que los mensajes que lleguen los va a convertir de una vez a formato json
+app.use(bodyParser.json());
+
 app.listen(port, function () {
   console.log("Server is listening at port: " + port);
 });
@@ -12,4 +15,4 @@ app.get("/", function (req, res) {
 });
 
 app.use("/api", api); //Ubicamos esta linea aqui porque debe quedar despues de la definicion de la variable app, aqui estamos estableciendo la ruta con el metodo use
-                      //establecemos las rutas a la instancia api, en la linea 2
+//establecemos las rutas a la instancia api, en la linea 2
